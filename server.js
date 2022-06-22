@@ -29,7 +29,21 @@ const typeDefs = gql`
     allTweets : [Tweet]
     tweet(id:ID) : Tweet
   }
+  type Mutation {
+    postTweet(text:String,userId:ID):Tweet
+  }
 `;
+//GET /api/v1/tweets
+//POST /api/v1/tweets
+//GET /api/v1/tweet/:id
+
+
+/*
+  type Query{
+    allTweets : [Tweet]
+    tweet(id:ID) : Tweet
+  } 실행되는 코드가 아니다. -->어떤 field가 return될지에 대한 설명
+*/
 
 const server = new ApolloServer({typeDefs})
 
