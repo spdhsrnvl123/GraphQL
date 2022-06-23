@@ -101,3 +101,30 @@ server.listen().then(({ url }) => {
 ```
 
 https://www.apollographql.com/docs/apollo-server/getting-started/
+
+## Define your GraphQL schema (GraphQL 스키마 정의)
+
+모든 GraphQL 서버(Apollo Server 포함)는 스키마를 사용하여 클라이언트가 쿼리할 수 있는 데이터 구조를 정의합니다.(스키마는 type definitions의 모음입니다.)
+
+```js
+//예시
+const typeDefs = gql`
+  type Book {
+    title: String
+    author: String
+  }
+  type Query {
+    books: [Book]
+  }
+`;
+```
+
+https://www.apollographql.com/docs/apollo-server/getting-started/#step-3-define-your-graphql-schema
+
+## Scalar type
+
+GraphQL 객체 타입에는 이름과 필드가 있지만 이 필드는 더욱 구체적인 데이터로 해석 되어야 합니다. 그 때 스칼라 타입을 사용할 수 있습니다.
+<br />
+GraphQL은 기본 스칼라 타입 세트와 함께 제공됩니다.<br />
+ID:ID 스칼라 타입은 객체를 다시 가져오거나 캐시의 키로 자주 사용되는 고유 식별자를 나타냅니다.<br />
+https://graphql.org/learn/schema/#scalar-types
