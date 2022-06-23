@@ -117,6 +117,7 @@ const typeDefs = gql`
     books: [Book]
   }
 `;
+//type Query는 실행되는 코드가 아니다. 어떤 field가 return될지에 대한 설명이다.
 ```
 
 https://www.apollographql.com/docs/apollo-server/getting-started/#step-3-define-your-graphql-schema
@@ -128,3 +129,66 @@ GraphQL 객체 타입에는 이름과 필드가 있지만 이 필드는 더욱 �
 GraphQL은 기본 스칼라 타입 세트와 함께 제공됩니다.<br />
 ID:ID 스칼라 타입은 객체를 다시 가져오거나 캐시의 키로 자주 사용되는 고유 식별자를 나타냅니다.<br />
 https://graphql.org/learn/schema/#scalar-types
+
+## Mutaitions
+
+GraphQL에 대한 대부분은 데이터 fetching이지만, 서버 측 데이터를 수정할 수 있는 방법이 필요합니다. 서버 측 데이터를 수정하는 모든 작업은 mutation을 통해 보내야 한다는 규칙을 설정하는 것이 유용합니다.
+
+```js
+mutation CreateReview($ep: Episode!, $review: ReviewInput!) {
+createReview(episode: $ep, review: $review) {
+stars
+commentary
+}
+}
+```
+
+https://graphql.org/learn/queries/#mutations
+
+## List and Non-Null
+
+아래 Character에 name에 String타입을 사용하고 느낌표 !를 추가하여 Non_null로 표시합니다. Non-Null로 표시하게 되면 서버가 항상 이 필드에 대해 null이 아닌 값을 반환할 것으로 예상합니다. 그래서 null 값을 얻게 되면 클라이언트에게 문제가 있음을 알립니다.
+
+```js
+type Character{
+    name:String!
+    appearsln:[Episode]!
+}
+```
+
+```js
+type Query{
+    tweet(id:ID!):Tweet! //틀림
+}
+/*
+만약 id가 9071인 tweet을 원한다고 하면 어떨까? database에 존재하지 않는 tweet인거다. 즉 되돌려 줄 tweet을 가지고 있지 않다. 그래서 Tweet! 느낌표를 빼줘야 된다.
+*/
+```
+
+https://graphql.org/learn/schema/#lists-and-non-null
+
+### review
+
+- 아폴로 서버를 실행하기 위해서는 반드시 최소 1개의 Query가 필요합니다.
+- type Query는 가장 기본적인 타입입니다.
+- Query에 넣는 필드들은 request할 수 있는 것들이 됩니다.
+- !를 쓰지 않으면 해당 필드는 nullable field가 됩니다. (null값을 가질 수 있는 필드)
+
+## Resolvers
+
+resolver 함수는 데이터베이스에 액세스한 다음 데이터를 반환합니다.
+
+```js
+const resolvers = {
+  Query: {
+    tweet(root, args) {
+      console.log(args);
+      return null;
+    },
+  },
+};
+/*
+user가 arguments를 보낼 때 그 argument들은 항상 resover function의 argument가 된다.
+-> 이 규칙은 GraphQL의 명세다.
+*/
+```
