@@ -16,13 +16,13 @@ const typeDefs = gql`
 
 const tweets = [
     {
-        id: "1",
-        text: "hello",
+        id:"1",
+        text:"first one!"
     },
     {
         id: "2",
-        text:"second one",
-    },
+        text:"second one"
+    }
 ]
 
 const typeDefs = gql`
@@ -54,13 +54,15 @@ const typeDefs = gql`
 const resolvers = {
     Query: {
         allTweets() {
-            return tweets;
+            return tweets
         },
-        tweet(root, {id}) {
-            return tweets.find((tweet) => tweet.id === id)
+        tweet(root, { id } ) {
+            console.log(id)
+            return tweets.find((real) => real.id === id);
+        // real->element
         }
-    },
-};
+    }
+}
 
 const server = new ApolloServer({typeDefs,resolvers})
 
