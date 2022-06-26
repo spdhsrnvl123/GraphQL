@@ -14,7 +14,7 @@ const typeDefs = gql`
 `rest API에서 GET request url을 노출시키는 거와 동일.
 */
 
-const tweets = [
+let tweets = [
     {
         id:"1",
         text:"first one!"
@@ -60,6 +60,23 @@ const resolvers = {
             console.log(id)
             return tweets.find((real) => real.id === id);
         // real->element
+        },
+    },
+    Mutation: {
+        postTweet(_, { text, userId }) {
+            const newTweet = {
+                id: tweets.length + 1,
+                text
+            };
+            tweets.push(newTweet);
+            return newTweet;
+        },
+        deleteTweet(_, { id }) {
+            const tweet = tweets.find((tweet) => tweet.id === id); //먼저 내가 지우려고 하는 tweet을 찾기
+            if (!tweet) return false; //찾기 못했다면 false
+            tweets = tweets.filter((tweet) => tweet.id !== id);
+            //tweet의 id가 삭제하려는 id와 같지 않은 tweet들로 filter를 거치면 tweet.filter는 array를 줄꺼다.
+            return true;
         }
     }
 }
