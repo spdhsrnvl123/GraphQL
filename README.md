@@ -74,7 +74,7 @@ https://youtu.be/4DxHX95Lq2U
 
 ## Swapi-GraphQL
 
-GraphQL은 GraphQL쿼리를 작성,검증 및 테스트하기 위한 브라우저 내 도구입니다.
+GraphiQL은 GraphQL쿼리를 작성,검증 및 테스트하기 위한 브라우저 내 도구입니다.
 <br />
 https://graphql.org/swapi-graphql
 
@@ -234,3 +234,91 @@ find4: undefined
 ```
 
 https://bbaktaeho-95.tistory.com/40
+
+## Resolver arguments
+
+Resolver 함수에 첫번째 arguments인 root는 Resolver함수안에서 호출되는 함수의 부모객체가 넣어진다.
+
+※ Resolver 함수에는 parent(root or source), args, context, info 의 네 가지 인수가 순서대로 전달됩니다.
+https://www.apollographql.com/docs/apollo-server/data/resolvers/#resolver-arguments
+
+### **ex)**
+
+```js
+let users = [
+    {
+        id:"1",
+        firstName:"nico",
+        lastName:"las"
+    },
+    {
+        id:"2",
+        firstName:"Elon",
+        lastName:"Mask"
+    }
+]
+const typeDefs = gql`
+  type User {
+    id:ID
+    firstName:String!
+    lastName:String!
+    fullName:String!
+  }
+
+  type Query {
+    allUsers : [User!]!
+  }
+
+`
+
+const resolvers = {
+    Query:{
+        allUsers(){
+            return users;
+        }
+    }
+    User:{
+        fullName(root){
+            console.log(root);
+            /*
+            root에 들어가는 값
+            first root)
+                {
+                    id:"1",
+                    firstName:"nico",
+                    lastName:"las"
+                }
+            second root)
+                {
+                    id:"2",
+                    firstName:"Elon",
+                    lastName:"Mask"
+                }
+            ※데이터값이 두개가 있기 때문에 두번 순회.
+            */
+            retrun "Hello"
+        }
+    }
+}
+/*(수정필요!)
+resolver의 첫번째 argument에서는 root query를 찾을 수 있다
+root안에는 User가 있다 ->fullName을 호출하는 User이기 때문이다.
+실행과정 :
+1) resolvers함수에 Query문 안에 allUsers함수가 실행된다.
+2) Query Type에 지정된 aallUsers는 User리스트를 확인하고 User의 타입을 확인하고 resovers함수의 allUsers()함수는 데이터값에 접근한다.
+3)지정된 User타입에 fullName이 없는걸 확인하고 resolver함수안에 fullName함수가 있는지 확인한다.
+4)fullName의 첫번째 인자로는 User의 첫번째 실행되어 얻은 users데이터가 들어간다
+5)users데이터와 합쳐 fullName의 리턴값을 반환한다.
+*/
+```
+
+```gql
+{
+  allUsers {
+    id
+    firstName
+    lastName
+    fullName
+  }
+}
+```

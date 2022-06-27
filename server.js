@@ -18,10 +18,12 @@ let tweets = [
   {
     id: "1",
     text: "first one!",
+    userId:"2"
   },
   {
     id: "2",
     text: "second one",
+    userId:"1"
   },
 ];
 
@@ -40,16 +42,18 @@ let users = [
 
 const typeDefs = gql`
   type User {
-    id: ID
+    id: ID!
     firstName: String!
     lastName: String!
-    fullName: String!
+    fullName: String! 
+    #fullName은 실제 data에는 없지만 User가 fullName을 가질거라고 GraphQL에게 말해주었다.
+    #GraphQL은 fullName이 resolver라는걸 인식할 수 있다.
   }
 
   type Tweet {
     id: ID!
     text: String!
-    author: User
+    author: User #field의 이름 author
   }
   type Query {
     allUsers: [User!]!
@@ -98,15 +102,21 @@ const resolvers = {
     },
   },
   User: {
-    fullName(root) {
-      console.log("fullName called!");
+
+      fullName({firstName,lastName}) {
+    //   console.log("fullName called!");
       // console.log(root);
       // console.log(firstName, lastName);
-      // return `${firstName} ${lastName}`;
-      console.log(root);
-      return "Hello";
+      return `${firstName} ${lastName}`;
+    //   return "Hello";
     },
-  },
+    },
+  Tweet: {
+      author({ userId }) {
+          return users.find((user))
+      }
+  }
+  
 };
 
 const server = new ApolloServer({ typeDefs, resolvers });
