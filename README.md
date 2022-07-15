@@ -1,4 +1,4 @@
-# NomaderCoder GraphQL API
+# GraphQL API
 
 ## API(Application Programming Interface)
 
